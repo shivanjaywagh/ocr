@@ -8,6 +8,11 @@ from PIL import Image
 import re
 
 
+
+from PIL import ImageGrab
+import time
+
+
 pytesseract.pytesseract.tesseract_cmd = r'C:/Program Files/Tesseract-OCR/tesseract.exe'
 
 tessdata_dir_config = '--tessdata-dir "C:/Program Files/Tesseract-OCR/tessdata"'
@@ -18,11 +23,25 @@ tessdata_dir_config = '--tessdata-dir "C:/Program Files/Tesseract-OCR/tessdata"'
 img = cv2.imread("D:/KTP-OCR-master/ktpocr/dataset/pancard0.jpg")
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
+
+
+
+x, y, w, h = 0,0,100,100
+cv2.rectangle(gray, (36,103), (186,163), (0, 0, 255),2)  #added by me
+
+cropped = gray[103:163,36:186]
+cv2.imshow('img',cropped)
+cv2.waitKey(0)
+
 ## (2) Threshold
-th, threshed = cv2.threshold(gray, 127, 255, cv2.THRESH_TRUNC)
+th, threshed = cv2.threshold(cropped, 127, 255, cv2.THRESH_TRUNC)
+
+hImg, wImg,_ = img.shape
 
 ## (3) Detect
 result = pytesseract.image_to_string((threshed), config = r'-l eng+hin --psm 6')
+from langdetect import detect_langs
+detect_langs(result)
 
 #print(result)
 
@@ -54,6 +73,16 @@ print(search_result) # Returns found object
 #for i in range:
 #  date = re.search(date_pattern, date.iat[i, index_description])
 #  data.iat[i,index_date] = date    drvyatautas yt regex
+
+#cv2.imshow('img', gray)
+#cv2.waitKey(500)
+
+
+
+
+
+
+
 
 
 
